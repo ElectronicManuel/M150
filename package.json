@@ -6,7 +6,7 @@
     "scripts": {
         "start": "ts-node -r tsconfig-paths/register ./src/server/index.ts",
         "dev": "webpack-dev-server --config ./config/webpack.config.dev.js",
-        "build": "webpack-dev-server --config ./config/webpack.config.prod.js",
+        "build": "webpack --p --config ./config/webpack.config.prod.js",
         "heroku-postbuild": "npm run build"
     },
     "repository": {
