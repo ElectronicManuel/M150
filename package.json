@@ -7,7 +7,7 @@
         "start": "ts-node -r tsconfig-paths/register ./src/server/index.ts",
         "dev": "webpack-dev-server --config ./config/webpack.config.dev.js",
         "build": "webpack-dev-server --config ./config/webpack.config.prod.js",
-        "heroku-postbuild": "build"
+        "heroku-postbuild": "npm run build"
     },
     "repository": {
         "type": "git",
