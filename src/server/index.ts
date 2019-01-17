@@ -1,4 +1,6 @@
 import * as express from 'express';
+import { admin } from './db';
+
 
 const app = express();
 
@@ -9,5 +11,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}, connected with firebase db ${admin.app().options.databaseURL}`);
 });
