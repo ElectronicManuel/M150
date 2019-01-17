@@ -7,7 +7,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const exts = ['.tsx', '.ts', '.js'];
 
 module.exports = {
-    entry: '../src/client/index.tsx',
+    entry: path.resolve(appDirectory, 'src/client/index.tsx'),
     output: {
         filename: 'bundle.js',
         path: path.resolve(appDirectory, 'dist'),
@@ -15,7 +15,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './index.html'
+            template: path.resolve(appDirectory, 'config/index.html')
         }),
         new CleanWebpackPlugin(['dist'], {
             root: path.resolve(appDirectory)
