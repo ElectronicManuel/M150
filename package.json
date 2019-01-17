@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "ts-node src/server/index.ts"
+        "start": "ts-node -r tsconfig-paths/register ./src/server/index.ts"
     },
     "repository": {
         "type": "git",
@@ -22,6 +22,10 @@
         "firebase": "^5.7.3",
         "firebase-admin": "^6.5.0",
         "ts-node": "^7.0.1",
-        "typescript": "^3.2.2"
+        "typescript": "^3.2.2",
+        "webpack": "^4.28.4"
+    },
+    "devDependencies": {
+        "tsconfig-paths": "^3.7.0"
     }
 }
