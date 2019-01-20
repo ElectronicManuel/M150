@@ -10,7 +10,9 @@ const port = process.env.PORT || 3000;
 app.use(express.static(DIST_PATH));
 
 // API requests here
-
+app.get('/test', (req, res) => {
+    res.send('Hey');
+})
 
 //Send index.html when the user access the web
 app.get('*', function (req, res) {

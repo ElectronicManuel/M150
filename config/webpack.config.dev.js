@@ -5,7 +5,8 @@ module.exports = merge(baseConfig, {
     mode: 'development',
     devServer: {
         contentBase: 'dist',
-        port: '8080',
+        port: '3000',
         historyApiFallback: true
     },
+    watch: true
 });
