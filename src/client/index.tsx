@@ -3,10 +3,14 @@ import * as ReactDOM from 'react-dom';
 import { Button, CssBaseline, MuiThemeProvider, createMuiTheme, Theme, PaletteType, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { FlashOffRounded, FlashOnRounded } from '@material-ui/icons';
 import axios from 'axios';
+import './firebase/setup';
+import * as firebase from 'firebase';
+import { LoginComponent } from './firebase/ui';
 
 type AppState = {
     themeType: PaletteType
     theme: Theme
+    authenticated: boolean
 }
 
 class App extends React.Component<any, AppState> {
@@ -17,8 +21,21 @@ class App extends React.Component<any, AppState> {
 
         this.state = {
             themeType: defaultTheme,
-            theme: this.getTheme(defaultTheme)
+            theme: this.getTheme(defaultTheme),
+            authenticated: false
         }
+
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                this.setState({
+                    authenticated: true
+                })
+            } else {
+                this.setState({
+                    authenticated: false
+                })
+            }
+        })
     }
 
     getTheme = (type: PaletteType) => {
@@ -84,13 +101,16 @@ class App extends React.Component<any, AppState> {
                             <Button
                                 variant='contained'
                                 onClick={async () => {
-                                try {
-                                    const result = await axios.get('/test');
-                                    alert(result.data);
-                                } catch(err) {
-                                    alert(JSON.stringify(err));
-                                }
+                                    try {
+                                        const result = await axios.get('/test');
+                                        alert(result.data);
+                                    } catch(err) {
+                                        alert(JSON.stringify(err));
+                                    }
                             }}>Request</Button>
+                            {
+                                this.state.authenticated ? <Button variant='contained' onClick={() => firebase.auth().signOut()}>Abmelden</Button> : <LoginComponent />
+                            }
                         </div>
                     </div>
                 </div>
