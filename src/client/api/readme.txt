@@ -1,0 +1,1 @@
+Die Dateien in diesem Unterordner sind durch Swaggerhub automatisch generiert worden.

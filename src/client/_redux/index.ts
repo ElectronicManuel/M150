@@ -3,25 +3,26 @@ import { UserState } from './users/types';
 import { combineReducers, Reducer, Dispatch, Action } from 'redux';
 import { History } from 'history';
 import { UserReducer } from './users/reducers';
-import { ThemeState } from './themes/types';
-import { ThemeReducer } from './themes/reducers';
-import { SeriesState } from './series/types';
-import { SeriesReducer } from './series/reducers';
+import { ProductsState } from './products/types';
+import { ProductsReducer } from './products/reducers';
+import { CartState } from './cart/types';
+import { CartReducer } from './cart/reducers';
 
 export interface ApplicationState {
-    theme: ThemeState
+    products: ProductsState
+    shopping_cart: CartState
     router: RouterState
     user: UserState
-    series: SeriesState
 }
 
 export const rootReducer: (history: History) => Reducer<ApplicationState> = (history) => {
     let combinedReducers = combineReducers({
+        router: connectRouter(history),
         user: UserReducer,
-        theme: ThemeReducer,
-        series: SeriesReducer
+        products: ProductsReducer,
+        shopping_cart: CartReducer
     });
-    return (connectRouter(history)(combinedReducers) as Reducer<ApplicationState>);
+    return combinedReducers;
 };
 
 export interface HasDispatch {
