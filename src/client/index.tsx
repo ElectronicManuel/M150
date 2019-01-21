@@ -1,11 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Button, CssBaseline, MuiThemeProvider, createMuiTheme, Theme, PaletteType, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
-import { FlashOffRounded, FlashOnRounded } from '@material-ui/icons';
+import { Button, CssBaseline, MuiThemeProvider, createMuiTheme, Theme, PaletteType, AppBar, Toolbar, IconButton, Typography, Badge } from '@material-ui/core';
+import { FlashOffRounded, FlashOnRounded, ShoppingCartRounded } from '@material-ui/icons';
 import axios from 'axios';
 import './firebase/setup';
 import * as firebase from 'firebase';
 import { LoginComponent } from './firebase/ui';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { ProductListPage } from './pages/product-list';
+import { LoginPage } from './pages/login';
 
 type AppState = {
     themeType: PaletteType
@@ -59,62 +62,59 @@ class App extends React.Component<any, AppState> {
 
     render() {
         return (
-            <MuiThemeProvider theme={this.state.theme}>
-                <CssBaseline />
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    height: '100%'
-                }}>
-                    <div>
-                        <AppBar position='relative'>
-                            <Toolbar style={{display: 'flex'}}>
-                                <Typography variant='h6' color='inherit' noWrap>
-                                    eBusiness
-                                </Typography>
-                                <div style={{flexGrow: 1}} />
-                                <div>
-                                <IconButton onClick={this.changeTheme} color='inherit'>
-                                    {
-                                        this.state.themeType === 'dark' ? <FlashOffRounded /> : <FlashOnRounded />
-                                    }
-                                </IconButton>
-                                </div>
-                            </Toolbar>
-                        </AppBar>
-                    </div>
+            <Router>
+                <MuiThemeProvider theme={this.state.theme}>
+                    <CssBaseline />
                     <div style={{
-                        flexGrow: 1,
                         display: 'flex',
-                        justifyContent: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.2)'
+                        flexDirection: 'column',
+                        width: '100%',
+                        height: '100%'
                     }}>
+                        <div>
+                            <AppBar position='relative'>
+                                <Toolbar style={{display: 'flex'}}>
+                                    <Typography variant='h6' color='inherit' noWrap>
+                                        Digimantec
+                                    </Typography>
+                                    <div style={{flexGrow: 1}} />
+                                    <div>
+                                    <IconButton onClick={this.changeTheme} color='inherit'>
+                                        {
+                                            this.state.themeType === 'dark' ? <FlashOffRounded /> : <FlashOnRounded />
+                                        }
+                                    </IconButton>
+                                    <IconButton color='inherit'>
+                                        <Badge badgeContent='3' color='secondary'>
+                                            <ShoppingCartRounded />
+                                        </Badge>
+                                    </IconButton>
+                                    </div>
+                                </Toolbar>
+                            </AppBar>
+                        </div>
                         <div style={{
-                            width: '80%',
-                            backgroundColor: this.state.theme.palette.background.default,
-                            paddingLeft: '2%',
-                            paddingRight: '2%',
-                            paddingTop: '1%'
+                            flexGrow: 1,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            backgroundColor: 'rgba(0, 0, 0, 0.2)'
                         }}>
-                            <Typography variant='h2'>Webshop</Typography>
-                            <Button
-                                variant='contained'
-                                onClick={async () => {
-                                    try {
-                                        const result = await axios.get('/test');
-                                        alert(result.data);
-                                    } catch(err) {
-                                        alert(JSON.stringify(err));
-                                    }
-                            }}>Request</Button>
-                            {
-                                this.state.authenticated ? <Button variant='contained' onClick={() => firebase.auth().signOut()}>Abmelden</Button> : <LoginComponent />
-                            }
+                            <div style={{
+                                width: '90%',
+                                backgroundColor: this.state.theme.palette.background.default,
+                                paddingLeft: '2%',
+                                paddingRight: '2%',
+                                paddingTop: '1%'
+                            }}>
+                                <Switch>
+                                    <Route path='/login' component={LoginPage} />
+                                    <Route component={ProductListPage} />
+                                </Switch>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </MuiThemeProvider>
+                </MuiThemeProvider>
+            </Router>
         )
     }
 }
