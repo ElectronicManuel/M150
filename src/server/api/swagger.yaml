@@ -1,0 +1,360 @@
+---
+swagger: "2.0"
+info:
+  description: "This is an API for a digimantec\n"
+  version: "1.0.0"
+  title: "Digimantec"
+basePath: "/api"
+tags:
+- name: "products"
+  description: "Everything about products"
+- name: "shopping_cart"
+  description: "A list of products"
+schemes:
+- "https"
+- "http"
+paths:
+  /products:
+    get:
+      tags:
+      - "products"
+      summary: "List products"
+      operationId: "listProducts"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+      x-swagger-router-controller: "Products"
+    post:
+      tags:
+      - "products"
+      summary: "Add a new product to the store"
+      operationId: "addProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Product object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        405:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "Products"
+  /product/{productId}:
+    get:
+      tags:
+      - "products"
+      summary: "Find product by ID"
+      description: "Returns a single product"
+      operationId: "getProductById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "ID of product to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "Products"
+    put:
+      tags:
+      - "products"
+      summary: "Updates a product in the store"
+      operationId: "updateProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "productId"
+        in: "path"
+        description: "ID of product that needs to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Product object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+        405:
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "Products"
+    delete:
+      tags:
+      - "products"
+      summary: "Deletes a product"
+      operationId: "deleteProduct"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "productId"
+        in: "path"
+        description: "Product id to delete"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "Products"
+  /shopping_cart:
+    get:
+      tags:
+      - "shopping_cart"
+      summary: "Get shopping cart for user"
+      description: "Returns the shopping cart of a user"
+      operationId: "getShoppingCart"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ShoppingCart"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "ShoppingCart not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "ShoppingCart"
+  /shopping_cart/{productId}:
+    post:
+      tags:
+      - "shopping_cart"
+      summary: "Adds a product to the shopping cart"
+      operationId: "addToShoppingCart"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "productId"
+        in: "path"
+        description: "Product id that needs to be added to the cart"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "ShoppingCart"
+    delete:
+      tags:
+      - "shopping_cart"
+      summary: "Deletes a product from the shopping cart"
+      operationId: "deleteProductFromCart"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "productId"
+        in: "path"
+        description: "Product id to delete"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Product"
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+        404:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "ShoppingCart"
+  /checkout:
+    post:
+      tags:
+      - "shopping_cart"
+      summary: "Checks a cart out"
+      operationId: "checkoutCart"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_token"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/CheckoutConfirmation"
+        403:
+          description: "Access denied"
+          schema:
+            $ref: "#/definitions/ApiError"
+      x-swagger-router-controller: "ShoppingCart"
+definitions:
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      imageUrl:
+        type: "string"
+      price:
+        type: "number"
+    example:
+      price: 0.80082819046101150206595775671303272247314453125
+      imageUrl: "imageUrl"
+      name: "name"
+      description: "description"
+      id: "id"
+  ShoppingCartItem:
+    type: "object"
+    properties:
+      amount:
+        type: "integer"
+      product:
+        $ref: "#/definitions/Product"
+  ShoppingCart:
+    type: "array"
+    items:
+      $ref: "#/definitions/ShoppingCartItem"
+  CheckoutConfirmation:
+    type: "object"
+    properties:
+      total:
+        type: "number"
+        description: "Total amount paid"
+      products:
+        type: "array"
+        items:
+          $ref: "#/definitions/Product"
+    example:
+      total: 0.80082819046101150206595775671303272247314453125
+      products:
+      - price: 0.80082819046101150206595775671303272247314453125
+        imageUrl: "imageUrl"
+        name: "name"
+        description: "description"
+        id: "id"
+      - price: 0.80082819046101150206595775671303272247314453125
+        imageUrl: "imageUrl"
+        name: "name"
+        description: "description"
+        id: "id"
+  ApiError:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
