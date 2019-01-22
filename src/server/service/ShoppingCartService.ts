@@ -1,7 +1,7 @@
 'use strict';
 
 import { ApiResult } from 'server/utils/writer';
-import { ShoppingCart, ShoppingCartItem } from 'client/api';
+import { ShoppingCart, ShoppingCartItem, Product, CheckoutConfirmation } from 'client/api';
 import { admin } from 'server/db';
 import { verifyIdToken } from 'server/utils/auth';
 
@@ -13,22 +13,71 @@ import { verifyIdToken } from 'server/utils/auth';
  * productId String Product id that needs to be added to the cart
  * returns Product
  **/
-export const addToShoppingCart = (id_token, productId) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const addToShoppingCart: (id_token: string, productId: string) => Promise<ApiResult<Product>> = async (id_token, productId) => {
+    try {
+        const decodedToken = await verifyIdToken(id_token);
+
+        const productSnap = await admin.firestore().collection('products').doc(productId).get();
+
+        if(!productSnap.exists) {
+            return {
+                code: 404,
+                error: {
+                    message: `Produkt mit der ID ${productId} nicht gefunden`
+                }
+            }
         }
-    });
+
+        const cartSnapshot = await admin.firestore().collection('shopping_carts').where('uid', '==', decodedToken.uid).get();
+
+        let cart = {
+            uid: decodedToken.uid,
+            items: []
+        }
+        if(cartSnapshot.empty) {
+            cart.items.push({
+                amount: 1,
+                product: {
+                    id: productId
+                }
+            })
+            await admin.firestore().collection('shopping_carts').add(cart);
+        } else {
+            let found = false;
+            for(let item of cartSnapshot.docs[0].data().items) {
+                if(item.product.id === productId) {
+                    item.amount++;
+                    found = true;
+                }
+                cart.items.push(item);
+            }
+            if(!found) {
+                cart.items.push({
+                    amount: 1,
+                    product: {
+                        id: productId
+                    }
+                })
+            }
+            await admin.firestore().collection('shopping_carts').doc(cartSnapshot.docs[0].id).update(cart);
+        }
+
+        return {
+            code: 200,
+            data: {
+                ...productSnap.data(),
+                id: productSnap.id
+            }
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Hinzufügen des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 
@@ -38,31 +87,55 @@ export const addToShoppingCart = (id_token, productId) => {
  * id_token String 
  * returns CheckoutConfirmation
  **/
-export const checkoutCart = (id_token) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "total": 0.80082819046101150206595775671303272247314453125,
-            "products": [{
-                "price": 0.80082819046101150206595775671303272247314453125,
-                "imageUrl": "imageUrl",
-                "name": "name",
-                "description": "description",
-                "id": "id"
-            }, {
-                "price": 0.80082819046101150206595775671303272247314453125,
-                "imageUrl": "imageUrl",
-                "name": "name",
-                "description": "description",
-                "id": "id"
-            }]
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const checkoutCart: (id_token: string) => Promise<ApiResult<CheckoutConfirmation>> = async (id_token) => {
+    try {
+        const decodedToken = await verifyIdToken(id_token);
+
+        const cartSnapshot = await admin.firestore().collection('shopping_carts').where('uid', '==', decodedToken.uid).get();
+
+        let total = 0;
+        const products: Product[] = [];
+
+        let cart = {
+            uid: decodedToken.uid,
+            items: []
         }
-    });
+        if(cartSnapshot.empty) {
+            await admin.firestore().collection('shopping_carts').add(cart);
+        } else {
+            for(let item of cartSnapshot.docs[0].data().items) {
+                const productSnap = await admin.firestore().collection('products').doc(item.product.id).get();
+                if(productSnap.exists) {
+                    products.push({
+                        ...productSnap.data(),
+                        id: productSnap.id
+                    });
+                    total += item.amount * productSnap.data().price;
+                    cart.items.push(item);
+                }
+            }
+            await admin.firestore().collection('shopping_carts').doc(cartSnapshot.docs[0].id).update({
+                uid: decodedToken.uid,
+                items: []
+            });
+        }
+
+        return {
+            code: 200,
+            data: {
+                products,
+                total
+            }
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Auschecken des Einkaufswagens: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 
@@ -73,22 +146,55 @@ export const checkoutCart = (id_token) => {
  * productId String Product id to delete
  * returns Product
  **/
-export const deleteProductFromCart = (id_token, productId) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const deleteProductFromCart: (id_token: string, productId: string) => Promise<ApiResult<Product>> = async (id_token, productId) => {
+    try {
+        const decodedToken = await verifyIdToken(id_token);
+
+        const productSnap = await admin.firestore().collection('products').doc(productId).get();
+
+        if(!productSnap.exists) {
+            return {
+                code: 404,
+                error: {
+                    message: `Produkt mit der ID ${productId} nicht gefunden`
+                }
+            }
         }
-    });
+
+        const cartSnapshot = await admin.firestore().collection('shopping_carts').where('uid', '==', decodedToken.uid).get();
+
+        let cart = {
+            uid: decodedToken.uid,
+            items: []
+        }
+        if(cartSnapshot.empty) {
+            await admin.firestore().collection('shopping_carts').add(cart);
+        } else {
+            for(let item of cartSnapshot.docs[0].data().items) {
+                if(item.product.id === productId) {
+                    item.amount--;
+                }
+                if(item.amount >= 1) cart.items.push(item);
+            }
+            await admin.firestore().collection('shopping_carts').doc(cartSnapshot.docs[0].id).update(cart);
+        }
+
+        return {
+            code: 200,
+            data: {
+                ...productSnap.data(),
+                id: productSnap.id
+            }
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Löschen des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 

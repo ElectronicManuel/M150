@@ -3,6 +3,7 @@
 import { Product } from 'client/api';
 import { ApiResult } from 'server/utils/writer';
 import { admin } from 'server/db';
+import { verifyIdToken } from 'server/utils/auth';
 
 
 /**
@@ -12,22 +13,41 @@ import { admin } from 'server/db';
  * body Product Product object that needs to be added to the store
  * returns Product
  **/
-export const addProduct = (id_token, body) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const addProduct: (id_token: string, body: Product) => Promise<ApiResult<Product>> = async (id_token, input: Product) => {
+    try {
+        if(!input.name || !input.price || !input.description || !input.imageUrl) {
+            return {
+                code: 405,
+                error: {
+                    message: 'Ungültige Eingabe'
+                }
+            }
         }
-    });
+        const decodedToken = await verifyIdToken(id_token);
+
+        let newProduct: Product = {
+            name: input.name,
+            price: input.price,
+            imageUrl: input.imageUrl,
+            description: input.description
+        }
+        const doc = await admin.firestore().collection('products').add(newProduct);
+        
+        newProduct.id = doc.id;
+
+        return {
+            code: 200,
+            data: newProduct
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Hinzufügen des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 
@@ -38,22 +58,41 @@ export const addProduct = (id_token, body) => {
  * productId String Product id to delete
  * returns Product
  **/
-export const deleteProduct = (id_token, productId) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const deleteProduct: (id_token: string, productId: string) => Promise<ApiResult<Product>> = async (id_token, productId) => {
+    try {
+        const decodedToken = await verifyIdToken(id_token);
+
+        const snap = await admin.firestore().collection('products').doc(productId).get();
+
+        if(!snap.exists) {
+            return {
+                code: 404,
+                error: {
+                    message: `Produkt mit der ID ${productId} nicht gefunden`
+                }
+            }
         }
-    });
+
+        const product = {
+            ...snap.data(),
+            id: snap.id
+        }
+
+        await admin.firestore().collection('products').doc(productId).delete();
+
+        return {
+            code: 200,
+            data: product
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Löschen des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 
@@ -129,21 +168,53 @@ export const listProducts: () => Promise<ApiResult<Product[]>> = async () => {
  * body Product Product object that needs to be added to the store
  * returns Product
  **/
-export const updateProduct = (id_token, productId, body) => {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const updateProduct: (id_token: string, productId: string, input: Product) => Promise<ApiResult<Product>> = async (id_token, productId, input) => {
+    try {
+        if(!input.name || !input.price || !input.description || !input.imageUrl) {
+            return {
+                code: 405,
+                error: {
+                    message: 'Ungültige Eingabe'
+                }
+            }
         }
-    });
+        const decodedToken = await verifyIdToken(id_token);
+
+        const snap = await admin.firestore().collection('products').doc(productId).get();
+
+        if(!snap.exists) {
+            return {
+                code: 404,
+                error: {
+                    message: `Produkt mit der ID ${productId} nicht gefunden`
+                }
+            }
+        }
+
+        let updatedProduct: Product = {
+            name: input.name,
+            price: input.price,
+            imageUrl: input.imageUrl,
+            description: input.description
+        }
+
+        await admin.firestore().collection('products').doc(productId).update(updatedProduct);
+
+        return {
+            code: 200,
+            data: {
+                ...updatedProduct,
+                id: snap.id
+            }
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Bearbeiten des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 

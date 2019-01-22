@@ -8,10 +8,10 @@ export const addProduct = function addProduct(req, res, next) {
     var body = req.swagger.params['body'].value;
     Products.addProduct(id_token, body)
         .then(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         })
         .catch(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         });
 };
 
@@ -20,10 +20,10 @@ export const deleteProduct = function deleteProduct(req, res, next) {
     var productId = req.swagger.params['productId'].value;
     Products.deleteProduct(id_token, productId)
         .then(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         })
         .catch(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         });
 };
 
@@ -54,9 +54,9 @@ export const updateProduct = function updateProduct(req, res, next) {
     var body = req.swagger.params['body'].value;
     Products.updateProduct(id_token, productId, body)
         .then(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         })
         .catch(function (response) {
-            utils.writeJson(res, response);
+            utils.handleResponse(res, response);
         });
 };
