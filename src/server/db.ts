@@ -13,6 +13,8 @@ if (serviceAccountOrPath) {
         credential: admin.credential.cert(credential),
         databaseURL: "https://m150ebusiness.firebaseio.com"
     });
+    const settings = {timestampsInSnapshots: true};
+    admin.firestore().settings(settings);
 } else {
     console.error('No firebase service account found')
 }

@@ -19,6 +19,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
             this.props.dispatch(setUser(user));
             if(user) {
                 user.getIdToken().then(idToken => {
+                    console.debug('IdToken: ', idToken);
                     this.shoppingCartApi.getShoppingCart(idToken).then(cart => {
                         this.props.dispatch(setShoppingCart(cart));
                         this.props.dispatch(setShoppingCartLoading(false));

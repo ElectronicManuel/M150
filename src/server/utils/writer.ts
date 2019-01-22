@@ -1,10 +1,25 @@
+import { ServerResponse } from 'http';
+import { ApiError } from 'client/api';
+
+export interface ApiResult<T> {
+    code: number
+    data?: T
+    error?: ApiError
+}
+
+export const handleResponse = <T>(res: ServerResponse, result: ApiResult<T>) => {
+    res.writeHead(result.code, { 'Content-Type': 'application/json' });
+    if(result.error) {
+        res.write(JSON.stringify(result.error));
+    } else if(result.data) {
+        res.write(JSON.stringify(result.data));
+    }
+    res.end();
+}
+
 var ResponsePayload = function (code, payload) {
     this.code = code;
     this.payload = payload;
-}
-
-export const respondWithCode = function (code, payload) {
-    return new ResponsePayload(code, payload);
 }
 
 export const writeJson = function (response, arg1, arg2?) {

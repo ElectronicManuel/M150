@@ -1,5 +1,9 @@
 'use strict';
 
+import { Product } from 'client/api';
+import { ApiResult } from 'server/utils/writer';
+import { admin } from 'server/db';
+
 
 /**
  * Add a new product to the store
@@ -8,7 +12,7 @@
  * body Product Product object that needs to be added to the store
  * returns Product
  **/
-export const addProduct = function (id_token, body) {
+export const addProduct = (id_token, body) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -34,7 +38,7 @@ export const addProduct = function (id_token, body) {
  * productId String Product id to delete
  * returns Product
  **/
-export const deleteProduct = function (id_token, productId) {
+export const deleteProduct = (id_token, productId) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -60,22 +64,32 @@ export const deleteProduct = function (id_token, productId) {
  * productId String ID of product to return
  * returns Product
  **/
-export const getProductById = function (productId) {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const getProductById: (productId: string) => Promise<ApiResult<Product>> = async (productId) => {
+    try {
+        const snapshot = await admin.firestore().collection('products').doc(productId).get();
+        if(!snapshot.exists) {
+            return {
+                code: 404,
+                error: {
+                    message: `Produkt mit der ID ${productId} nicht gefunden`
+                }
+            }
         }
-    });
+        return {
+            code: 200,
+            data: {
+                ...snapshot.data(),
+                id: snapshot.id
+            }
+        };
+    } catch(err) {
+        return {
+            code: 500,
+            error: {
+                message: `Fehler beim Anzeigen des Produkts: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 
 
@@ -84,28 +98,26 @@ export const getProductById = function (productId) {
  *
  * returns List
  **/
-export const listProducts = function () {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [{
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        }, {
-            "price": 0.80082819046101150206595775671303272247314453125,
-            "imageUrl": "imageUrl",
-            "name": "name",
-            "description": "description",
-            "id": "id"
-        }];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
+export const listProducts: () => Promise<ApiResult<Product[]>> = async () => {
+    try {
+        const snapshot = await admin.firestore().collection('products').get();
+        const productList: Product[] = [];
+        snapshot.forEach(doc => {
+            productList.push({
+                ...doc.data(),
+                id: doc.id
+            });
+        })
+        return {
+            code: 200,
+            data: productList
+        };
+    } catch(err) {
+        throw {
+            code: 500,
+            error: `Fehler beim Anzeigen der Produkte: ${JSON.stringify(err)}`
         }
-    });
+    }
 }
 
 
@@ -117,7 +129,7 @@ export const listProducts = function () {
  * body Product Product object that needs to be added to the store
  * returns Product
  **/
-export const updateProduct = function (id_token, productId, body) {
+export const updateProduct = (id_token, productId, body) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {

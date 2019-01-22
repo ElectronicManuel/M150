@@ -1,5 +1,10 @@
 'use strict';
 
+import { ApiResult } from 'server/utils/writer';
+import { ShoppingCart, ShoppingCartItem } from 'client/api';
+import { admin } from 'server/db';
+import { verifyIdToken } from 'server/utils/auth';
+
 
 /**
  * Adds a product to the shopping cart
@@ -8,7 +13,7 @@
  * productId String Product id that needs to be added to the cart
  * returns Product
  **/
-export const addToShoppingCart = function (id_token, productId) {
+export const addToShoppingCart = (id_token, productId) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -33,7 +38,7 @@ export const addToShoppingCart = function (id_token, productId) {
  * id_token String 
  * returns CheckoutConfirmation
  **/
-export const checkoutCart = function (id_token) {
+export const checkoutCart = (id_token) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -68,7 +73,7 @@ export const checkoutCart = function (id_token) {
  * productId String Product id to delete
  * returns Product
  **/
-export const deleteProductFromCart = function (id_token, productId) {
+export const deleteProductFromCart = (id_token, productId) => {
     return new Promise(function (resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -94,15 +99,42 @@ export const deleteProductFromCart = function (id_token, productId) {
  * id_token String 
  * returns ShoppingCart
  **/
-export const getShoppingCart = function (id_token) {
-    return new Promise(function (resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
+export const getShoppingCart: (id_token: string) => Promise<ApiResult<ShoppingCart>> = async (id_token) => {
+    try {
+        const decodedToken = await verifyIdToken(id_token);
+
+        const cartSnap = await admin.firestore().collection('shopping_carts').where('uid', '==', decodedToken.uid).get();
+        let cart: ShoppingCart = [];
+        if(!cartSnap.empty) {
+            for(let item of cartSnap.docs[0].data().items as ShoppingCartItem[]) {
+                const snap = await admin.firestore().collection('products').doc(item.product.id).get();
+                cart.push({
+                    amount: item.amount,
+                    product: {
+                        ...snap.data(),
+                        id: item.product.id
+                    }
+                });
+            }
         } else {
-            resolve();
+            await admin.firestore().collection('shopping_carts').add({
+                uid: decodedToken.uid,
+                items: []
+            });
         }
-    });
+
+        return {
+            code: 200,
+            data: cart
+        }
+    } catch(err) {
+        if(err.code) return err;
+        return {
+            code: 500,
+            error: {
+                message: `Ein Fehler ist aufgetreten: ${JSON.stringify(err)}`
+            }
+        }
+    }
 }
 

@@ -19,8 +19,6 @@ import { Configuration } from "./configuration";
 
 const BASE_PATH = "/api".replace(/\/+$/, "");
 
-console.log('base path', BASE_PATH);
-
 /**
  *
  * @export
