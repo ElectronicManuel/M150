@@ -23,7 +23,7 @@ const LayoutBase = (props: LayoutProps) => (
         <div>
             <AppBar position='relative'>
                 <Toolbar style={{ display: 'flex' }}>
-                    <Typography variant='h6' color='inherit' noWrap onClick={() => props.dispatch(push('/'))}>
+                    <Typography variant='h6' color='inherit' noWrap onClick={() => props.dispatch(push('/'))} style={{cursor: 'pointer'}}>
                         Digimantec
                     </Typography>
                     <div style={{ flexGrow: 1 }} />
@@ -46,7 +46,7 @@ const LayoutBase = (props: LayoutProps) => (
                                                 <ShoppingCartRounded />
                                             </Badge>
                                         </IconButton>
-                                        <Button variant='contained' onClick={() => firebase.auth().signOut()} color='secondary'>
+                                        <Button variant='contained' onClick={() => firebase.auth().signOut()} color='secondary' style={{marginLeft: '5px'}}>
                                             Abmelden
                                         </Button>
                                     </div>

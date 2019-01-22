@@ -8,18 +8,29 @@ import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
 import { setProductLoading, setProductList } from './_redux/products/actions';
 
 class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
+
+    shoppingCartApi = new ShoppingCartApi()
+    productsApi = new ProductsApi()
+
     constructor(props) {
         super(props);
 
         firebase.auth().onAuthStateChanged(user => {
             this.props.dispatch(setUser(user));
+            if(user) {
+                user.getIdToken().then(idToken => {
+                    this.shoppingCartApi.getShoppingCart(idToken).then(cart => {
+                        this.props.dispatch(setShoppingCart(cart));
+                        this.props.dispatch(setShoppingCartLoading(false));
+                    });
+                })
+            } else {
+                this.props.dispatch(setShoppingCart([]));
+                this.props.dispatch(setShoppingCartLoading(false));
+            }
         });
 
-        new ShoppingCartApi().getShoppingCart('asdf').then(cart => {
-            this.props.dispatch(setShoppingCart(cart));
-            this.props.dispatch(setShoppingCartLoading(false));
-        });
-        new ProductsApi().listProducts().then(products => {
+        this.productsApi.listProducts().then(products => {
             this.props.dispatch(setProductList(products));
             this.props.dispatch(setProductLoading(false));
         });

@@ -28,6 +28,13 @@ class ThemeHandlerBase extends React.Component<ApplicationState, ThemeState> {
             },
             typography: {
                 useNextVariants: true
+            },
+            overrides: {
+                MuiButton: {
+                    root: {
+                        textTransform: 'none'
+                    }
+                }
             }
         })
     }
