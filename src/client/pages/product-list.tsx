@@ -45,7 +45,7 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
         ))
         return (
             <div>
-                <Typography variant='h3'>Produktee</Typography>
+                <Typography variant='h3'>Produkte</Typography>
                 {productList}
             </div>
         )
