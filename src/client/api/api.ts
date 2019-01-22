@@ -17,7 +17,9 @@ import * as url from "url";
 import * as portableFetch from "portable-fetch";
 import { Configuration } from "./configuration";
 
-const BASE_PATH = "https://virtserver.swaggerhub.com/ElectronicManuel/Digimantec/1.0.0".replace(/\/+$/, "");
+const BASE_PATH = "/api".replace(/\/+$/, "");
+
+console.log('base path', BASE_PATH);
 
 /**
  *
