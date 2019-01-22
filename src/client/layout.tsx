@@ -4,7 +4,7 @@ import { FlashOffRounded, FlashOnRounded, ShoppingCartRounded, HourglassFullRoun
 import { ApplicationState, mapAppState, mapDispatch, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
 import { Pages } from './pages/pages';
-import * as firebase from 'firebase';
+import { auth } from 'firebase';
 import { push } from 'connected-react-router';
 import { Link } from 'react-router-dom';
 
@@ -46,7 +46,7 @@ const LayoutBase = (props: LayoutProps) => (
                                                 <ShoppingCartRounded />
                                             </Badge>
                                         </IconButton>
-                                        <Button variant='contained' onClick={() => firebase.auth().signOut()} color='secondary' style={{marginLeft: '5px'}}>
+                                        <Button variant='contained' onClick={() => auth().signOut()} color='secondary' style={{marginLeft: '5px'}}>
                                             Abmelden
                                         </Button>
                                     </div>

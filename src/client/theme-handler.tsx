@@ -13,7 +13,9 @@ class ThemeHandlerBase extends React.Component<ApplicationState, ThemeState> {
     constructor(props) {
         super(props);
 
-        const defaultTheme: PaletteType = 'light';
+        let defaultTheme: PaletteType = 'light';
+        let storedTheme = window.localStorage.getItem('theme');
+        if(storedTheme && (storedTheme === 'light' || storedTheme === 'dark')) defaultTheme = storedTheme as PaletteType;
 
         this.state = {
             themeType: defaultTheme,
@@ -44,7 +46,8 @@ class ThemeHandlerBase extends React.Component<ApplicationState, ThemeState> {
         this.setState({
             themeType: opposite,
             theme: this.getTheme(opposite)
-        })
+        });
+        window.localStorage.setItem('theme', opposite);
     }
 
     render() {

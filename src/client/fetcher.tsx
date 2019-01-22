@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mapAppState, mapDispatch, ApplicationState, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
-import * as firebase from 'firebase';
+import { auth } from 'firebase';
 import { setUser } from './_redux/users/actions';
 import { ShoppingCartApi, ProductsApi } from './api';
 import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
@@ -15,7 +15,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
     constructor(props) {
         super(props);
 
-        firebase.auth().onAuthStateChanged(user => {
+        auth().onAuthStateChanged(user => {
             this.props.dispatch(setUser(user));
             if(user) {
                 user.getIdToken().then(idToken => {
