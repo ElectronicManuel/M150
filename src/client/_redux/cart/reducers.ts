@@ -2,7 +2,8 @@ import { Reducer } from 'redux';
 import { CartState, CartAction } from './types';
 
 const defaultState: CartState = {
-    shopping_cart: []
+    shopping_cart: [],
+    loading: true
 }
 
 export const CartReducer: Reducer<CartState, CartAction> = (state = defaultState, action): CartState => {
@@ -11,6 +12,11 @@ export const CartReducer: Reducer<CartState, CartAction> = (state = defaultState
             return {
                 ...state,
                 shopping_cart: action.payload.shopping_cart
+            };
+        case '@@shopping_cart/SET_LOADING':
+            return {
+                ...state,
+                loading: action.payload.loading
             };
         default:
             return state;

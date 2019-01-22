@@ -44,3 +44,9 @@ export const mapRouter = (state: ApplicationState): HasRouter => {
         router: state.router
     }
 }
+
+export const mapAppState = (state: ApplicationState): ApplicationState => {
+    return {
+        ...state
+    }
+}

@@ -3,6 +3,7 @@ import { ShoppingCart } from 'client/api';
 
 export type CartState = {
     shopping_cart: ShoppingCart
+    loading: boolean
 }
 
 export interface SetShoppingCartAction extends Action {
@@ -12,5 +13,13 @@ export interface SetShoppingCartAction extends Action {
     };
 }
 
+export interface SetShoppingCartLoadingAction extends Action {
+    type: '@@shopping_cart/SET_LOADING';
+    payload: {
+        loading: boolean
+    };
+}
 
-export type CartAction = SetShoppingCartAction;
+
+
+export type CartAction = SetShoppingCartAction | SetShoppingCartLoadingAction;

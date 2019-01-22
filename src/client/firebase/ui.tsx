@@ -8,7 +8,8 @@ const uiConfig: firebaseui.auth.Config = {
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
-    credentialHelper: firebaseui.auth.CredentialHelper.NONE
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+    signInSuccessUrl: '/'
 };
 
 export class LoginComponent extends React.Component {

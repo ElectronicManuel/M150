@@ -3,6 +3,7 @@ import { User } from 'firebase';
 
 export type UserState = {
     user?: User
+    loading: boolean
 }
 
 export interface SetUserAction extends Action {
