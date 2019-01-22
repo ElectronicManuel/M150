@@ -6,7 +6,15 @@ import { connect } from 'react-redux';
 import { Pages } from './pages/pages';
 import { auth } from 'firebase';
 import { push } from 'connected-react-router';
-import { Link } from 'react-router-dom';
+import { ShoppingCart } from './api';
+
+function countShoppingCart(shoppingCart: ShoppingCart) {
+    let count = 0;
+    for(let item of shoppingCart) {
+        count += item.amount;
+    }
+    return count;
+}
 
 export type LayoutProps = {
     changeTheme: () => void
@@ -42,7 +50,7 @@ const LayoutBase = (props: LayoutProps) => (
                                 props.user.user ?
                                     <div style={{display: 'inline'}}>
                                         <IconButton color='inherit' onClick={() => props.dispatch(push('/shopping_cart'))}>
-                                            <Badge badgeContent={props.shopping_cart.shopping_cart.length} color='secondary'>
+                                            <Badge badgeContent={countShoppingCart(props.shopping_cart.shopping_cart)} color='secondary'>
                                                 <ShoppingCartRounded />
                                             </Badge>
                                         </IconButton>
@@ -74,6 +82,21 @@ const LayoutBase = (props: LayoutProps) => (
             }}>
                 <Pages />
             </div>
+        </div>
+        <div>
+            <Button onClick={() => {
+                auth().currentUser.getIdToken().then(token => {
+                    console.log(token);
+                    alert('Du findest deinen ID Token in der Konsole');
+                }).catch(err => {
+                    alert('Du musst angemeldet sein um deinen ID Token zu sehen.');
+                })
+            }}>
+                Get ID Token
+            </Button>
+            <Button onClick={() => window.location.pathname='/docs'}>
+                Docs
+            </Button>
         </div>
     </div>
 )

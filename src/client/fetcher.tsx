@@ -6,6 +6,7 @@ import { setUser } from './_redux/users/actions';
 import { ShoppingCartApi, ProductsApi } from './api';
 import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
 import { setProductLoading, setProductList } from './_redux/products/actions';
+import { replace } from 'connected-react-router';
 
 class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
 
@@ -18,8 +19,8 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
         auth().onAuthStateChanged(user => {
             this.props.dispatch(setUser(user));
             if(user) {
+                this.props.dispatch(replace('/'));
                 user.getIdToken().then(idToken => {
-                    console.debug('IdToken: ', idToken);
                     this.shoppingCartApi.getShoppingCart(idToken).then(cart => {
                         this.props.dispatch(setShoppingCart(cart));
                         this.props.dispatch(setShoppingCartLoading(false));
