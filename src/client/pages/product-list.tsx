@@ -2,24 +2,25 @@ import * as React from 'react';
 import { Typography, LinearProgress, Card, CardActionArea, CardMedia, CardContent, CardActions, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { HasDispatch, ApplicationState, mapAppState, mapDispatch } from 'client/_redux';
+import { APIContext } from 'client/fetcher';
+import { push } from 'connected-react-router';
 
 class ProductListPageBase extends React.Component<ApplicationState & HasDispatch> {
+    static contextType = APIContext
+
     render() {
-        if(this.props.products.loading) {
-            return <LinearProgress />
-        }
         const productList = this.props.products.product_list.map(product => (
             <Card key={product.id} style={{
                 width: '30%'
             }}>
-                <CardActionArea>
+                <CardActionArea onClick={() => this.props.dispatch(push(`/product/${product.id}`))}>
                     <CardMedia
                         style={{
                             objectFit: 'cover',
                             height: '30%'
                         }}
                         component='img'
-                        image={'https://material-ui.com/static/images/cards/contemplative-reptile.jpg'}
+                        image={product.imageUrl}
                     />
                     <CardContent>
                         <Typography gutterBottom variant='h5' component='h2'>
@@ -34,10 +35,10 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <Button size='small' color='primary' variant='contained'>
-                        In den Warenkorb
+                    <Button size='small' color='primary' variant='contained' onClick={() => this.context.addProductToShoppingCart(product.id)}>
+                        Kaufen
                     </Button>
-                    <Button size='small' color='primary'>
+                    <Button size='small' color='primary' onClick={() => this.props.dispatch(push(`/product/${product.id}`))}>
                         Details
                     </Button>
                 </CardActions>
@@ -45,6 +46,9 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
         ))
         return (
             <div>
+                <LinearProgress style={{
+                    width: this.props.products.loading ? undefined : '0'
+                }} />
                 <Typography variant='h3'>Produkte</Typography>
                 {productList}
             </div>

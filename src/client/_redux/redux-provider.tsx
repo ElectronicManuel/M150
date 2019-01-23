@@ -8,6 +8,15 @@ const history = createBrowserHistory();
 const store = configureStore(history);
 
 export class ReduxProvider extends React.Component {
+    constructor(props) {
+        super(props);
+
+        history.listen(location => {
+            console.log('Location change: ', location.pathname);
+            this.forceUpdate();
+        })
+    }
+
     render() {
         return (
             <Provider store={store}>

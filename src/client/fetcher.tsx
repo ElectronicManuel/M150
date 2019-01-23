@@ -6,7 +6,20 @@ import { setUser } from './_redux/users/actions';
 import { ShoppingCartApi, ProductsApi } from './api';
 import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
 import { setProductLoading, setProductList } from './_redux/products/actions';
-import { replace } from 'connected-react-router';
+
+export interface APIContextInterface {
+    fetchProducts: () => any
+    fetchShoppingCart: () => any
+    addProductToShoppingCart: (productId: string) => any
+    removeFromShoppingCart: (productId: string) => any
+}
+
+export const APIContext = React.createContext<APIContextInterface>({
+    fetchProducts: () => {},
+    fetchShoppingCart: () => {},
+    addProductToShoppingCart: (productId: string) => {},
+    removeFromShoppingCart: (productId: string) => {}
+})
 
 class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
 
@@ -19,7 +32,6 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
         auth().onAuthStateChanged(user => {
             this.props.dispatch(setUser(user));
             if(user) {
-                this.props.dispatch(replace('/'));
                 user.getIdToken().then(idToken => {
                     this.shoppingCartApi.getShoppingCart(idToken).then(cart => {
                         this.props.dispatch(setShoppingCart(cart));
@@ -38,8 +50,60 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
         });
     }
 
+    fetchProducts = async () => {
+        this.props.dispatch(setProductLoading(true));
+        try {
+            const products = await this.productsApi.listProducts();
+            this.props.dispatch(setProductList(products));
+        } catch(err) {
+        }
+        this.props.dispatch(setProductLoading(false));
+    }
+
+    fetchShoppingCart = async () => {
+        this.props.dispatch(setShoppingCartLoading(true));
+        try {
+            const token = await auth().currentUser.getIdToken();
+
+            const cart = await this.shoppingCartApi.getShoppingCart(token);
+            this.props.dispatch(setShoppingCart(cart));
+        } catch(err) {
+        }
+        this.props.dispatch(setShoppingCartLoading(false));
+    }
+
+    addProductToShoppingCart = async (productId: string) => {
+        try {
+            const token = await auth().currentUser.getIdToken();
+            await this.shoppingCartApi.addToShoppingCart(token, productId);
+            this.fetchShoppingCart();
+            this.fetchProducts();
+        } catch(err) {
+            alert('Bitte melde dich an um dieses Produkt zu kaufen');
+        }
+    }
+
+    removeFromShoppingCart = async (productId: string) => {
+        try {
+            const token = await auth().currentUser.getIdToken();
+            await this.shoppingCartApi.deleteProductFromCart(token, productId);
+            this.fetchShoppingCart();
+            this.fetchProducts();
+        } catch(err) {
+        }
+    }
+
     render() {
-        return this.props.children;
+        return (
+            <APIContext.Provider value={{
+                fetchProducts: this.fetchProducts,
+                fetchShoppingCart: this.fetchShoppingCart,
+                addProductToShoppingCart: this.addProductToShoppingCart,
+                removeFromShoppingCart: this.removeFromShoppingCart
+            }}>
+                {this.props.children}
+            </APIContext.Provider>
+        );
     }
 }
 
