@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Badge, Theme, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton, Badge, Theme, Button, Grid } from '@material-ui/core';
 import { FlashOffRounded, FlashOnRounded, ShoppingCartRounded, HourglassFullRounded, RefreshRounded } from '@material-ui/icons';
 import { ApplicationState, mapAppState, mapDispatch, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
@@ -84,15 +84,17 @@ class LayoutBase extends React.Component<LayoutProps> {
                     justifyContent: 'center',
                     backgroundColor: 'rgba(0, 0, 0, 0.2)'
                 }}>
-                    <div style={{
-                        width: '90%',
-                        backgroundColor: this.props.theme.palette.background.default,
-                        paddingLeft: '2%',
-                        paddingRight: '2%',
-                        paddingTop: '1%'
-                    }}>
-                        <Pages />
-                    </div>
+                    <Grid container direction='row' justify='space-around' alignItems='stretch'>
+                        <Grid item xs={12} sm={10} style={{
+                            backgroundColor: this.props.theme.palette.background.default,
+                            paddingLeft: '2%',
+                            paddingRight: '2%',
+                            paddingTop: '1%',
+                            overflowY: 'scroll'
+                        }}>
+                            <Pages />
+                        </Grid>
+                    </Grid>
                 </div>
                 <div>
                     <Button onClick={() => {

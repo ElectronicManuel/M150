@@ -13,7 +13,7 @@ class ThemeHandlerBase extends React.Component<ApplicationState, ThemeState> {
     constructor(props) {
         super(props);
 
-        let defaultTheme: PaletteType = 'light';
+        let defaultTheme: PaletteType = 'dark';
         let storedTheme = window.localStorage.getItem('theme');
         if(storedTheme && (storedTheme === 'light' || storedTheme === 'dark')) defaultTheme = storedTheme as PaletteType;
 

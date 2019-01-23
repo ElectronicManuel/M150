@@ -170,14 +170,6 @@ export const listProducts: () => Promise<ApiResult<Product[]>> = async () => {
  **/
 export const updateProduct: (id_token: string, productId: string, input: Product) => Promise<ApiResult<Product>> = async (id_token, productId, input) => {
     try {
-        if(!input.name || !input.price || !input.description || !input.imageUrl) {
-            return {
-                code: 405,
-                error: {
-                    message: 'Ungültige Eingabe'
-                }
-            }
-        }
         const decodedToken = await verifyIdToken(id_token);
 
         const snap = await admin.firestore().collection('products').doc(productId).get();
@@ -192,10 +184,8 @@ export const updateProduct: (id_token: string, productId: string, input: Product
         }
 
         let updatedProduct: Product = {
-            name: input.name,
-            price: input.price,
-            imageUrl: input.imageUrl,
-            description: input.description
+            ...snap.data(),
+            ...input
         }
 
         await admin.firestore().collection('products').doc(productId).update(updatedProduct);
