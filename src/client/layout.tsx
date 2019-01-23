@@ -101,18 +101,21 @@ class LayoutBase extends React.Component<LayoutProps> {
                 <Button href='/docs' target='_blank'>
                         Dokumentation
                     </Button>
-                    <Button onClick={async () => {
-                        try {
-                            const token = await firebase.auth().currentUser.getIdToken();
-                            console.log(token);
-                            alert('Du findest deinen ID Token in der Konsole. In der Dokumentation kannst du damit API Anfragen auf geschützte Endpunkte absetzen.');
-                            return;
-                        } catch(err) {
-                        }
-                        alert('Du musst angemeldet sein um deinen ID Token zu sehen.');
-                    }}>
-                        IDToken anzeigen
-                    </Button>
+                    {
+                        this.props.user.user &&
+                        <Button onClick={async () => {
+                            try {
+                                const token = await firebase.auth().currentUser.getIdToken();
+                                console.log(token);
+                                alert('Du findest deinen ID Token in der Konsole. In der Dokumentation kannst du damit API Anfragen auf geschützte Endpunkte absetzen.');
+                                return;
+                            } catch(err) {
+                            }
+                            alert('Du musst angemeldet sein um deinen ID Token zu sehen.');
+                        }}>
+                            IDToken anzeigen
+                        </Button>
+                    }
                 </div>
             </div>
         )
