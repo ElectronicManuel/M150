@@ -3,7 +3,7 @@ import { mapAppState, mapDispatch, ApplicationState, HasDispatch } from './_redu
 import { connect } from 'react-redux';
 import { auth } from 'firebase';
 import { setUser } from './_redux/users/actions';
-import { ShoppingCartApi, ProductsApi } from './api';
+import { ShoppingCartApi, ProductsApi, CheckoutConfirmation } from './api';
 import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
 import { setProductLoading, setProductList } from './_redux/products/actions';
 
@@ -12,13 +12,15 @@ export interface APIContextInterface {
     fetchShoppingCart: () => any
     addProductToShoppingCart: (productId: string) => any
     removeFromShoppingCart: (productId: string) => any
+    checkout: () => Promise<CheckoutConfirmation | null>
 }
 
 export const APIContext = React.createContext<APIContextInterface>({
     fetchProducts: () => {},
     fetchShoppingCart: () => {},
     addProductToShoppingCart: (productId: string) => {},
-    removeFromShoppingCart: (productId: string) => {}
+    removeFromShoppingCart: (productId: string) => {},
+    checkout: async () => {return null}
 })
 
 class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
@@ -93,13 +95,28 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
         }
     }
 
+    checkout = async () => {
+        this.props.dispatch(setShoppingCartLoading(true));
+        try {
+            const token = await auth().currentUser.getIdToken();
+            const confirmation = await this.shoppingCartApi.checkoutCart(token);
+            await this.fetchShoppingCart();
+            this.props.dispatch(setShoppingCartLoading(false));
+            return confirmation;
+        } catch(err) {
+            this.props.dispatch(setShoppingCartLoading(false));
+            return null;
+        }
+    }
+
     render() {
         return (
             <APIContext.Provider value={{
                 fetchProducts: this.fetchProducts,
                 fetchShoppingCart: this.fetchShoppingCart,
                 addProductToShoppingCart: this.addProductToShoppingCart,
-                removeFromShoppingCart: this.removeFromShoppingCart
+                removeFromShoppingCart: this.removeFromShoppingCart,
+                checkout: this.checkout
             }}>
                 {this.props.children}
             </APIContext.Provider>

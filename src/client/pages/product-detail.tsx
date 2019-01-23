@@ -40,8 +40,8 @@ class ProductDetailPageBase extends React.Component<ApplicationState & HasDispat
                 }} />
                 {
                     (!product && !this.props.products.loading) ?
-                        <Typography>
-                            Produkt nicht gefunden
+                        <Typography variant='subtitle1'>
+                            Produkt nicht gefunden.
                         </Typography>
                         :
                         product &&

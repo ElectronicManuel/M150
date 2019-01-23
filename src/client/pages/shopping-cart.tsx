@@ -6,9 +6,19 @@ import { APIContext } from 'client/fetcher';
 import { push } from 'connected-react-router';
 import { displayChfAmount } from 'util/util';
 import { RemoveRounded, AddRounded } from '@material-ui/icons';
+import { CheckoutConfirmation } from 'client/api';
 
 class ShoppingCartPageBase extends React.Component<ApplicationState & HasDispatch> {
     static contextType = APIContext
+
+    checkout = async () => {
+        const confirmation: CheckoutConfirmation | null = await this.context.checkout();
+        if(!confirmation) {
+            alert('Es ist ein Fehler aufgetreten');
+        }
+
+        alert(`Bestellung von ${displayChfAmount(confirmation.total)} versandt.`);
+    }
 
     render() {
         let total = 0;
@@ -66,13 +76,28 @@ class ShoppingCartPageBase extends React.Component<ApplicationState & HasDispatc
                         display: 'flex',
                     }}>
                         <Grid container spacing={24}>
-                            <Grid item xl style={{flexGrow: 1}}>
-                                <Grid container direction='column' spacing={8}>
-                                    {cartList}
-                                </Grid>
-                            </Grid>
-                            <Grid item xs>
-                                <Typography>Total: {displayChfAmount(total)}</Typography>
+                            {
+                                this.props.shopping_cart.shopping_cart.length > 0 ?
+                                    <Grid item xl style={{flexGrow: 1}}>
+                                        <Grid container direction='column' spacing={8}>
+                                            {cartList}
+                                        </Grid>
+                                    </Grid>
+                                    :
+                                    <Grid item xl style={{flexGrow: 1}}>
+                                        <Typography variant='subtitle1'>
+                                            Du hast keine Produkte in deinem Einkaufswagen.
+                                        </Typography>
+                                    </Grid>
+                            }
+                            
+                            <Grid item xs style={{display: 'flex', justifyContent: 'flex-end'}}>
+                                <div>
+                                    <Typography variant='subtitle1'>Total: <b>{displayChfAmount(total)}</b></Typography>
+                                    <Button disabled={this.props.shopping_cart.shopping_cart.length <= 0} variant='contained' color='primary' style={{float: 'right'}} onClick={this.checkout}>
+                                        Bestellen
+                                    </Button>
+                                </div>
                             </Grid>
                         </Grid>
                     </div>
