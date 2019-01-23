@@ -43,7 +43,7 @@ class ProductDetailPageBase extends React.Component<ApplicationState & HasDispat
                             Produkt nicht gefunden
                         </Typography>
                         :
-                        !this.props.products.loading &&
+                        product &&
                             <Grid container spacing={8} direction='column'>
                                 <Grid item style={{
                                     display: 'flex',
