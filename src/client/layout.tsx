@@ -34,7 +34,7 @@ class LayoutBase extends React.Component<LayoutProps> {
                 height: '100%'
             }}>
                 <div>
-                    <AppBar position='relative'>
+                    <AppBar position='relative' style={{zIndex: 999}}>
                         <Toolbar style={{ display: 'flex' }}>
                             <Typography variant='h6' color='inherit' noWrap onClick={() => this.props.dispatch(push('/'))} style={{cursor: 'pointer'}}>
                                 Digimantec
@@ -90,7 +90,8 @@ class LayoutBase extends React.Component<LayoutProps> {
                             paddingLeft: '2%',
                             paddingRight: '2%',
                             paddingTop: '1%',
-                            overflowY: 'scroll'
+                            overflowY: 'scroll',
+                            overflowX: 'hidden'
                         }}>
                             <Pages />
                         </Grid>
