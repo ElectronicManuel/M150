@@ -311,10 +311,10 @@ definitions:
       price:
         type: "number"
     example:
-      price: 0.80082819046101150206595775671303272247314453125
-      imageUrl: "imageUrl"
-      name: "name"
-      description: "description"
+      price: 23.05
+      imageUrl: "http://example.com/holztisch.jpg"
+      name: "Holztisch"
+      description: "Dieser Tisch ist aus Holz."
       id: "id"
   ShoppingCartItem:
     type: "object"
@@ -338,17 +338,17 @@ definitions:
         items:
           $ref: "#/definitions/Product"
     example:
-      total: 0.80082819046101150206595775671303272247314453125
+      total: 576.4
       products:
-      - price: 0.80082819046101150206595775671303272247314453125
-        imageUrl: "imageUrl"
-        name: "name"
-        description: "description"
+      - price: 23.05
+        imageUrl: "http://example.com/holztisch.jpg"
+        name: "Holztisch"
+        description: "Dieser Tisch ist aus Holz."
         id: "id"
-      - price: 0.80082819046101150206595775671303272247314453125
-        imageUrl: "imageUrl"
-        name: "name"
-        description: "description"
+      - price: 553.35
+        imageUrl: "http://example.com/Laptop.jpg"
+        name: "Laptop"
+        description: "Schwarzer Laptop."
         id: "id"
   ApiError:
     type: "object"
