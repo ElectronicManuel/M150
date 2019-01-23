@@ -2,4 +2,4 @@
 
 ## Lokal ausführen
 Um "Digimantec" lokal zu starten muss npm installiert sein.  
-Danach einfach ´start.bat´ ausführen.
+Danach einfach `start.bat` ausführen.
