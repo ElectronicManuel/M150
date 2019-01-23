@@ -1,3 +1,7 @@
+/*
+ * This file provides the reducer for the user redux state
+ */
+
 import { Reducer } from 'redux';
 import { UserState, UserActions } from './types';
 

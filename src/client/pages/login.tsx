@@ -1,3 +1,7 @@
+/*
+ * The LoginPage component contains the login page
+ */
+
 import * as React from 'react';
 import { LoginComponent } from 'client/firebase/ui';
 import { Typography } from '@material-ui/core';

@@ -1,3 +1,8 @@
+/*
+ * This file is the entrypoint for the react app, it contains the root component and mounts it to the dom
+ * The App component includes the ReduxProvider, the Fetcher and the ThemeHandler.
+ */
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './firebase/setup';

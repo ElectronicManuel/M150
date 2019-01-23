@@ -1,5 +1,6 @@
 import { admin } from 'server/db';
 
+// Verifies ID Token and returns decoded object
 export const verifyIdToken = async (idToken) => {
     let decodedToken: admin.auth.DecodedIdToken;
     try {

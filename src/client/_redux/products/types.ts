@@ -1,3 +1,7 @@
+/*
+ * This file provides type definitions for the products redux state
+ */
+
 import { Action } from 'redux';
 import { Product } from 'client/api';
 

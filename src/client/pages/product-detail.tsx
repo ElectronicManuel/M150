@@ -1,3 +1,7 @@
+/*
+ * The ProductDetailPage component contains the product detail page
+ */
+
 import * as React from 'react';
 import { Typography, LinearProgress, Card, CardActionArea, CardMedia, CardContent, CardActions, Button, Grid } from '@material-ui/core';
 import { connect } from 'react-redux';

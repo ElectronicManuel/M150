@@ -1,3 +1,7 @@
+/*
+ * This file loads firebaseui used for signing in the user and configures it.
+ */
+
 import * as firebase from 'firebase/app';
 import * as React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';

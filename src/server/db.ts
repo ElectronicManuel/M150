@@ -1,3 +1,8 @@
+/*
+ * Initializes the firebase admin sdk with the service account credentials provided through the environment variable $M150_SERVICE_ACCOUNT
+ * Can either be the service key itself or a file path to a file containing the key.
+ */
+
 import * as admin from 'firebase-admin';
 
 const serviceAccountOrPath = process.env.M150_SERVICE_ACCOUNT;

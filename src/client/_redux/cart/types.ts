@@ -1,3 +1,7 @@
+/*
+ * This file provides type definitions for the shopping cart redux state
+ */
+
 import { Action } from 'redux';
 import { ShoppingCart } from 'client/api';
 

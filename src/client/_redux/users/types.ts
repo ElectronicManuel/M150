@@ -1,3 +1,7 @@
+/*
+ * This file provides type definitions for the user redux state
+ */
+
 import { Action } from 'redux';
 import { User } from 'firebase/auth';
 

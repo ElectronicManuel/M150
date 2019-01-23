@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+ * This file contains the implemention for the api endpoints.
+ */
+
 import { ApiResult } from 'server/utils/writer';
 import { ShoppingCart, ShoppingCartItem, Product, CheckoutConfirmation } from 'client/api';
 import { admin } from 'server/db';

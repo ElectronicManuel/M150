@@ -1,3 +1,7 @@
+/*
+ * This file provides a function to configer the redux store with the root reducer and router middleware
+ */
+
 import { createStore, applyMiddleware, Store } from 'redux';
 import { History } from 'history';
 import { routerMiddleware } from 'connected-react-router'

@@ -1,3 +1,7 @@
+/*
+ * This file contains action generators related to products
+ */
+
 import { SetProductListAction, SetProductLoadingAction } from './types';
 import { Product } from 'client/api';
 

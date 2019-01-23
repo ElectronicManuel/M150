@@ -1,3 +1,7 @@
+/*
+ * This file provides the reducer for the products redux state
+ */
+
 import { Reducer } from 'redux';
 import { ProductsState, ProductActions } from './types';
 

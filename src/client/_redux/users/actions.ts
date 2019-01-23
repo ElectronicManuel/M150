@@ -1,3 +1,7 @@
+/*
+ * This file contains action generators related to users
+ */
+
 import { SetUserAction } from './types';
 import { User } from 'firebase/auth';
 

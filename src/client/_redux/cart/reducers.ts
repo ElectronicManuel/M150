@@ -1,3 +1,7 @@
+/*
+ * This file provides the reducer for the shopping cart redux state
+ */
+
 import { Reducer } from 'redux';
 import { CartState, CartAction } from './types';
 

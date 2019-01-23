@@ -1,3 +1,7 @@
+/*
+ * The Layout component is the main layout of the app, this includes the appbar, the body and the footer.
+ */
+
 import * as React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Badge, Theme, Button, Grid } from '@material-ui/core';
 import { FlashOffRounded, FlashOnRounded, ShoppingCartRounded, HourglassFullRounded, RefreshRounded } from '@material-ui/icons';

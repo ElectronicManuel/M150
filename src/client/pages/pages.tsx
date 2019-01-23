@@ -1,3 +1,7 @@
+/*
+ * The Pages component handles routing between all the pages in the app
+ */
+
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { LoginPage } from './login';

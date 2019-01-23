@@ -1,3 +1,7 @@
+/*
+ * The ThemeHandler component provides theme context and loads theme configuration from localStorage
+ */
+
 import * as React from 'react';
 import { ApplicationState, mapDispatch, mapAppState } from './_redux';
 import { connect } from 'react-redux';

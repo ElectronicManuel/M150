@@ -1,5 +1,9 @@
 'use strict';
 
+/*
+ * This file contains the implemention for the api endpoints.
+ */
+
 import { Product } from 'client/api';
 import { ApiResult } from 'server/utils/writer';
 import { admin } from 'server/db';

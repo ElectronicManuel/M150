@@ -1,5 +1,9 @@
+/*
+ * The ShoppingCartPage component contains the shopping cart page page
+ */
+
 import * as React from 'react';
-import { Typography, LinearProgress, Card, CardActionArea, CardMedia, CardContent, CardActions, Button, Grid, IconButton } from '@material-ui/core';
+import { Typography, LinearProgress, Card, CardMedia, CardContent, Button, Grid, IconButton } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { HasDispatch, ApplicationState, mapAppState, mapDispatch } from 'client/_redux';
 import { APIContext } from 'client/fetcher';

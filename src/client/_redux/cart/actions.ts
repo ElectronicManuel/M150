@@ -1,3 +1,7 @@
+/*
+ * This file contains action generators related to the shopping cart
+ */
+
 import { SetShoppingCartAction, SetShoppingCartLoadingAction } from './types';
 import { ShoppingCart } from 'client/api';
 

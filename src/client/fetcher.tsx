@@ -1,3 +1,8 @@
+/*
+ * The Fetcher component provides functions for interacting with the REST API through context
+ * It listens to login/logout events and makes changes to the redux store accordingly
+ */
+
 import * as React from 'react';
 import { mapAppState, mapDispatch, ApplicationState, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
