@@ -4,7 +4,7 @@ import { FlashOffRounded, FlashOnRounded, ShoppingCartRounded, HourglassFullRoun
 import { ApplicationState, mapAppState, mapDispatch, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
 import { Pages } from './pages/pages';
-import { auth } from 'firebase';
+import * as firebase from 'firebase/app';
 import { push } from 'connected-react-router';
 import { ShoppingCart } from './api';
 import { APIContext } from './fetcher';
@@ -65,7 +65,7 @@ class LayoutBase extends React.Component<LayoutProps> {
                                                         <ShoppingCartRounded />
                                                     </Badge>
                                                 </IconButton>
-                                                <Button variant='contained' onClick={() => auth().signOut()} color='secondary' style={{marginLeft: '5px'}}>
+                                                <Button variant='contained' onClick={() => firebase.auth().signOut()} color='secondary' style={{marginLeft: '5px'}}>
                                                     Abmelden
                                                 </Button>
                                             </div>
@@ -103,7 +103,7 @@ class LayoutBase extends React.Component<LayoutProps> {
                     </Button>
                     <Button onClick={async () => {
                         try {
-                            const token = auth().currentUser.getIdToken();
+                            const token = await firebase.auth().currentUser.getIdToken();
                             console.log(token);
                             alert('Du findest deinen ID Token in der Konsole. In der Dokumentation kannst du damit API Anfragen auf geschützte Endpunkte absetzen.');
                             return;

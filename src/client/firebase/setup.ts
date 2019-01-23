@@ -1,4 +1,5 @@
-import { initializeApp } from 'firebase';
+import * as app from 'firebase/app';
+import 'firebase/auth';
 
 const config = {
     apiKey: "AIzaSyDvSIHTzB0SXKtnGxIVHLf9sty64xU3lYI",
@@ -9,4 +10,4 @@ const config = {
     messagingSenderId: "1043034958596"
 };
 
-initializeApp(config);
+app.initializeApp(config);

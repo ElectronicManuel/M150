@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { User } from 'firebase';
+import { User } from 'firebase/auth';
 
 export type UserState = {
     user?: User

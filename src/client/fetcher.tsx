@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mapAppState, mapDispatch, ApplicationState, HasDispatch } from './_redux';
 import { connect } from 'react-redux';
-import { auth } from 'firebase';
+import * as firebase from 'firebase/app';
 import { setUser } from './_redux/users/actions';
 import { ShoppingCartApi, ProductsApi, CheckoutConfirmation } from './api';
 import { setShoppingCart, setShoppingCartLoading } from './_redux/cart/actions';
@@ -31,7 +31,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
     constructor(props) {
         super(props);
 
-        auth().onAuthStateChanged(user => {
+        firebase.auth().onAuthStateChanged(user => {
             this.props.dispatch(setUser(user));
             if(user) {
                 user.getIdToken().then(idToken => {
@@ -65,7 +65,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
     fetchShoppingCart = async () => {
         this.props.dispatch(setShoppingCartLoading(true));
         try {
-            const token = await auth().currentUser.getIdToken();
+            const token = await firebase.auth().currentUser.getIdToken();
 
             const cart = await this.shoppingCartApi.getShoppingCart(token);
             this.props.dispatch(setShoppingCart(cart));
@@ -76,7 +76,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
 
     addProductToShoppingCart = async (productId: string) => {
         try {
-            const token = await auth().currentUser.getIdToken();
+            const token = await firebase.auth().currentUser.getIdToken();
             await this.shoppingCartApi.addToShoppingCart(token, productId);
             this.fetchShoppingCart();
             this.fetchProducts();
@@ -87,7 +87,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
 
     removeFromShoppingCart = async (productId: string) => {
         try {
-            const token = await auth().currentUser.getIdToken();
+            const token = await firebase.auth().currentUser.getIdToken();
             await this.shoppingCartApi.deleteProductFromCart(token, productId);
             this.fetchShoppingCart();
             this.fetchProducts();
@@ -98,7 +98,7 @@ class FetcherBase extends React.Component<ApplicationState & HasDispatch, any> {
     checkout = async () => {
         this.props.dispatch(setShoppingCartLoading(true));
         try {
-            const token = await auth().currentUser.getIdToken();
+            const token = await firebase.auth().currentUser.getIdToken();
             const confirmation = await this.shoppingCartApi.checkoutCart(token);
             await this.fetchShoppingCart();
             this.props.dispatch(setShoppingCartLoading(false));
