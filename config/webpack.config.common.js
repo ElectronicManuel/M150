@@ -34,12 +34,12 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'babel-loader!ts-loader',
-                include: path.resolve(appDirectory, 'src/client'),
+                include: path.resolve(appDirectory, 'src'),
             },
             {
                 test: /\.jsx?$/,
                 loader: 'babel-loader',
-                include: path.resolve(appDirectory, 'src/client'),
+                include: path.resolve(appDirectory, 'src'),
             },
             {
                 exclude: [

@@ -5,6 +5,7 @@ import { HasDispatch, ApplicationState, mapAppState, mapDispatch } from 'client/
 import { APIContext } from 'client/fetcher';
 import { RouteComponentProps } from 'react-router';
 import Lightbox from 'react-image-lightbox';
+import { displayChfAmount } from 'util/util';
 
 export type ProductDetailState = {
     lightboxOpen: boolean
@@ -63,7 +64,7 @@ class ProductDetailPageBase extends React.Component<ApplicationState & HasDispat
                                     <Grid container spacing={24}>
                                         <Grid item style={{flexGrow: 1}}>
                                             <Typography variant='h3'>{product.name}</Typography>
-                                            <Typography variant='subtitle1' color='textSecondary'>CHF {product.price}</Typography>
+                                            <Typography variant='subtitle1' color='textSecondary'>{displayChfAmount(product.price)}</Typography>
                                             <Typography variant='body1'>{product.description}</Typography>
                                         </Grid>
                                         <Grid item>

@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import { HasDispatch, ApplicationState, mapAppState, mapDispatch } from 'client/_redux';
 import { APIContext } from 'client/fetcher';
 import { push } from 'connected-react-router';
+import { displayChfAmount, truncateText } from 'util/util';
 
 class ProductListPageBase extends React.Component<ApplicationState & HasDispatch> {
     static contextType = APIContext
 
     render() {
         const productList = this.props.products.product_list.map(product => (
-            <Grid item xs key={product.id}>
+            <Grid item xs={12} sm={12} md={6} lg={4} key={product.id}>
                 <Card>
                     <CardActionArea onClick={() => this.props.dispatch(push(`/product/${product.id}`))}>
                         <CardMedia
@@ -26,10 +27,10 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
                                 {product.name}
                             </Typography>
                             <Typography variant='subtitle1' color='textSecondary'>
-                                CHF {product.price}
+                                {displayChfAmount(product.price)}
                             </Typography>
                             <Typography component='p'>
-                                {product.description}
+                                {truncateText(product.description, 100)}
                             </Typography>
                         </CardContent>
                     </CardActionArea>
@@ -49,7 +50,7 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
                 <LinearProgress style={{
                     width: this.props.products.loading ? undefined : '0'
                 }} />
-                <Typography variant='h3'>Produkte</Typography>
+                <Typography variant='h3' style={{marginBottom: '1%'}}>Produkte</Typography>
                 <Grid container spacing={24}>
                     {productList}
                 </Grid>

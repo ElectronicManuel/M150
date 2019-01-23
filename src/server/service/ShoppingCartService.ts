@@ -4,6 +4,7 @@ import { ApiResult } from 'server/utils/writer';
 import { ShoppingCart, ShoppingCartItem, Product, CheckoutConfirmation } from 'client/api';
 import { admin } from 'server/db';
 import { verifyIdToken } from 'server/utils/auth';
+import { roundDigits } from 'util/util';
 
 
 /**
@@ -124,7 +125,7 @@ export const checkoutCart: (id_token: string) => Promise<ApiResult<CheckoutConfi
             code: 200,
             data: {
                 products,
-                total
+                total: roundDigits(total, 2)
             }
         }
     } catch(err) {

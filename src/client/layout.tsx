@@ -97,7 +97,10 @@ class LayoutBase extends React.Component<LayoutProps> {
                         </Grid>
                     </Grid>
                 </div>
-                <div>
+                <div style={{backgroundColor: 'rgba(0, 0, 0, 0.25)'}}>
+                <Button href='/docs' target='_blank'>
+                        Dokumentation
+                    </Button>
                     <Button onClick={() => {
                         auth().currentUser.getIdToken().then(token => {
                             console.log(token);
@@ -106,10 +109,7 @@ class LayoutBase extends React.Component<LayoutProps> {
                             alert('Du musst angemeldet sein um deinen ID Token zu sehen.');
                         })
                     }}>
-                        Get ID Token
-                    </Button>
-                    <Button onClick={() => window.location.pathname='/docs'}>
-                        Docs
+                        IDToken anzeigen
                     </Button>
                 </div>
             </div>
