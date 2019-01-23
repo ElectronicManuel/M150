@@ -77,7 +77,7 @@ class ShoppingCartPageBase extends React.Component<ApplicationState & HasDispatc
                     }}>
                         <Grid container spacing={24}>
                             {
-                                this.props.shopping_cart.shopping_cart.length > 0 ?
+                                (this.props.shopping_cart.shopping_cart.length > 0 || this.props.shopping_cart.loading) ?
                                     <Grid item xl style={{flexGrow: 1}}>
                                         <Grid container direction='column' spacing={8}>
                                             {cartList}

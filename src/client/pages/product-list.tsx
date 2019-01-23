@@ -52,7 +52,7 @@ class ProductListPageBase extends React.Component<ApplicationState & HasDispatch
                 }} />
                 <Typography variant='h3' style={{marginBottom: '1%'}}>Produkte</Typography>
                 {
-                    this.props.products.product_list.length > 0 ?
+                    (this.props.products.product_list.length > 0 || this.props.products.loading) ?
                         <Grid container spacing={24}>
                             {productList}
                         </Grid>
